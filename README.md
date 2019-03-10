@@ -1,7 +1,7 @@
-# Bungee Admin Tools
-The plugin page can be found [here](http://www.spigotmc.org/resources/bungee-admin-tools.444/)
+# Oasis Admin Tools - Fork of Bungee Admin Tools
+The original plugin page can be found [here](http://www.spigotmc.org/resources/bungee-admin-tools.444/)
 
-The BungeeAdminTools web-interface repo can be found [here](https://github.com/alphartdev/BAT-WebInterface/)
+The original BungeeAdminTools web-interface repo can be found [here](https://github.com/alphartdev/BAT-WebInterface/)
 
 ## For developers
 
