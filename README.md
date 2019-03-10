@@ -3,6 +3,12 @@ The original plugin page can be found [here](http://www.spigotmc.org/resources/b
 
 The original BungeeAdminTools web-interface repo can be found [here](https://github.com/alphartdev/BAT-WebInterface/)
 
+## Changes from Bungee Admin Tools
+* Code has been refactored to allow compilation on my own machine (10/3/2019)
+* More coming soon
+
+---
+
 ## For developers
 
 ### Importing the project
