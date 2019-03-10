@@ -15,11 +15,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-
-import com.zaxxer.hikari.HikariDataSource;
-import net.md_5.bungee.api.ProxyServer;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.varia.NullAppender;
@@ -28,9 +24,11 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.io.CharStreams;
 import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
+import com.zaxxer.hikari.HikariDataSource;
 
 import fr.Alphart.BAT.BAT;
 import fr.Alphart.BAT.Utils.CallbackUtils.Callback;
+import net.md_5.bungee.api.ProxyServer;
 
 public class DataSourceHandler {
 	// Connection informations
@@ -40,7 +38,7 @@ public class DataSourceHandler {
 	private String database;
 	private String port;
 	private String host;
-	
+
 	private static boolean sqlite = false; // If sqlite is used or not
 	private Connection SQLiteConn;
 
@@ -73,9 +71,9 @@ public class DataSourceHandler {
 		ds.setMaximumPoolSize(8);
 		try {
 			final Connection conn = ds.getConnection();
-		    int intOffset = Calendar.getInstance().getTimeZone().getOffset(Calendar.getInstance().getTimeInMillis()) / 1000;
-		    String offset = String.format("%02d:%02d", Math.abs(intOffset / 3600), Math.abs((intOffset / 60) % 60));
-		    offset = (intOffset >= 0 ? "+" : "-") + offset;
+			int intOffset = Calendar.getInstance().getTimeZone().getOffset(Calendar.getInstance().getTimeInMillis()) / 1000;
+			String offset = String.format("%02d:%02d", Math.abs(intOffset / 3600), Math.abs((intOffset / 60) % 60));
+			offset = (intOffset >= 0 ? "+" : "-") + offset;
 			conn.createStatement().executeQuery("SET time_zone='" + offset + "';");
 			conn.close();
 			BAT.getInstance().getLogger().config("BoneCP is loaded !");
@@ -83,10 +81,10 @@ public class DataSourceHandler {
 			BAT.getInstance().getLogger().severe("BAT encounters a problem during the initialization of the database connection."
 					+ " Please check your logins and database configuration.");
 			if(e.getCause() instanceof CommunicationsException){
-			    BAT.getInstance().getLogger().severe(e.getCause().getMessage());
+				BAT.getInstance().getLogger().severe(e.getCause().getMessage());
 			}
 			if(BAT.getInstance().getConfiguration().isDebugMode()){
-			    BAT.getInstance().getLogger().log(Level.SEVERE, e.getMessage(), e);
+				BAT.getInstance().getLogger().log(Level.SEVERE, e.getMessage(), e);
 			}
 			throw e;
 		}
@@ -125,20 +123,20 @@ public class DataSourceHandler {
 				// To avoid concurrency problem with SQLite, we will just use one connection. Cf : constructor above for SQLite
 				synchronized (SQLiteConn) {
 					SQLiteConn = DriverManager.getConnection("jdbc:sqlite:" + BAT.getInstance().getDataFolder().getAbsolutePath() + File.separator
-								+ "bat_database.db");
+							+ "bat_database.db");
 					return SQLiteConn;
 				}
 			}
 			return ds.getConnection();
 		} catch (final SQLException e) {
 			BAT.getInstance().getLogger().severe(
-			        "BAT can't etablish connection with the database. Please report this and include the following lines :");
+					"BAT can't etablish connection with the database. Please report this and include the following lines :");
 			if(e.getCause() instanceof CommunicationsException){
-			    BAT.getInstance().getLogger().severe(e.getCause().getMessage());
+				BAT.getInstance().getLogger().severe(e.getCause().getMessage());
 			}
-            if (BAT.getInstance().getConfiguration().isDebugMode()) {
-                e.printStackTrace();
-            }
+			if (BAT.getInstance().getConfiguration().isDebugMode()) {
+				e.printStackTrace();
+			}
 			return null;
 		}
 	}
@@ -146,7 +144,7 @@ public class DataSourceHandler {
 	public boolean getSQLite() {
 		return sqlite;
 	}
-	
+
 	public static boolean isSQLite() {
 		return sqlite;
 	}
@@ -167,7 +165,7 @@ public class DataSourceHandler {
 					new StreamPumper(testProcess.getInputStream()).pump();
 					int returnValue = testProcess.waitFor();
 					if(returnValue != 0){
-					    throw new Exception();
+						throw new Exception();
 					}
 				} catch (final Exception e) {
 					onComplete.done("The backup can't be achieved because mysqldump is nowhere to be found.", null);
@@ -195,7 +193,7 @@ public class DataSourceHandler {
 						SQLQueries.Kick.table, SQLQueries.Comments.table, SQLQueries.Core.table));
 				String backupPath = backupFile.getAbsolutePath();
 				if(backupPath.contains(" ")){
-				    backupPath = "\"" + backupPath + "\"";
+					backupPath = "\"" + backupPath + "\"";
 				}
 				backupCmd = backupCmd.replace("{user}", username).replace("{database}", database)
 						.replace("{path}", backupPath).replace("{tables}", tables);
@@ -206,9 +204,9 @@ public class DataSourceHandler {
 				}
 				try {
 					Process backupProcess = Runtime.getRuntime().exec(backupCmd);
-	                final StreamPumper errorPumper = new StreamPumper(backupProcess.getErrorStream());
-	                errorPumper.pump();
-	                new StreamPumper(backupProcess.getInputStream()).pump();;
+					final StreamPumper errorPumper = new StreamPumper(backupProcess.getErrorStream());
+					errorPumper.pump();
+					new StreamPumper(backupProcess.getInputStream()).pump();;
 					int exitValue = backupProcess.waitFor();
 					if(exitValue == 0){
 						final String[] splittedPath = backupFile.getAbsolutePath().split((File.separator.equals("\\") ? "\\\\" : File.separator));
@@ -218,7 +216,7 @@ public class DataSourceHandler {
 						onComplete.done("An error happens during the creation of the mysql backup. Please check the logs", null);
 						BAT.getInstance().getLogger().severe("An error happens during the creation of the mysql backup. Please report :");
 						for(final String message : errorPumper.getLines()){
-						    BAT.getInstance().getLogger().severe(message);
+							BAT.getInstance().getLogger().severe(message);
 						}
 					}
 				} catch (final Exception e) {
@@ -228,7 +226,7 @@ public class DataSourceHandler {
 			}
 		});
 	}
-	
+
 	// Useful methods
 	public static String handleException(final SQLException e) {
 		BAT.getInstance()
@@ -248,38 +246,38 @@ public class DataSourceHandler {
 			}
 		}
 	}
-	
+
 	public class StreamPumper{
-	    private final InputStreamReader reader;
-	    private List<String> pumpedLines = null;
-	    
-	    public StreamPumper(final InputStream is){
-	        reader = new InputStreamReader(is);
-	    }
-	    
-	    /**
-	     * Starts a new async task and pump the inputstream
-	     */
-	    public void pump(){
-	        ProxyServer.getInstance().getScheduler().runAsync(BAT.getInstance(), new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        pumpedLines = CharStreams.readLines(reader);
-                        reader.close();
-                    } catch (final IOException e) {
-                        BAT.getInstance().getLogger().severe("BAT encounter an error while reading the stream of subprocess. Please report this :");
-                        e.printStackTrace();
-                    }
-                }
-            });
-	    }
-	    
-	    public List<String> getLines(){
-	        if(pumpedLines == null){
-	            return new ArrayList<String>();
-	        }
-	        return pumpedLines;
-	    }
+		private final InputStreamReader reader;
+		private List<String> pumpedLines = null;
+
+		public StreamPumper(final InputStream is){
+			reader = new InputStreamReader(is);
+		}
+
+		/**
+		 * Starts a new async task and pump the inputstream
+		 */
+		public void pump(){
+			ProxyServer.getInstance().getScheduler().runAsync(BAT.getInstance(), new Runnable() {
+				@Override
+				public void run() {
+					try {
+						pumpedLines = CharStreams.readLines(reader);
+						reader.close();
+					} catch (final IOException e) {
+						BAT.getInstance().getLogger().severe("BAT encounter an error while reading the stream of subprocess. Please report this :");
+						e.printStackTrace();
+					}
+				}
+			});
+		}
+
+		public List<String> getLines(){
+			if(pumpedLines == null){
+				return new ArrayList<String>();
+			}
+			return pumpedLines;
+		}
 	}
 }

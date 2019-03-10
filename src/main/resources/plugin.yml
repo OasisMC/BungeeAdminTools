@@ -1,5 +1,5 @@
-name: BungeeAdminTools
-author: Alphart
+name: OasisAdminTools
+author: Revilo410 (Original by Alphart)
 version: ${project.version}
 main: fr.Alphart.BAT.BAT
 depends: ['Yamler']

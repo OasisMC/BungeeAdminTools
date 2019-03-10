@@ -14,13 +14,6 @@ import java.util.MissingResourceException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import lombok.Setter;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.TabExecutor;
-
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.imaginarycode.minecraft.redisbungee.RedisBungee;
@@ -30,6 +23,11 @@ import fr.Alphart.BAT.Modules.Core.CommandQueue;
 import fr.Alphart.BAT.Modules.Core.Core;
 import fr.Alphart.BAT.Modules.Core.CoreCommand;
 import fr.Alphart.BAT.Utils.UUIDNotFoundException;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.TabExecutor;
 
 public abstract class BATCommand extends net.md_5.bungee.api.plugin.Command implements TabExecutor {
 	private static final Pattern pattern = Pattern.compile("<.*?>");
@@ -40,7 +38,18 @@ public abstract class BATCommand extends net.md_5.bungee.api.plugin.Command impl
 	private boolean runAsync = false;
 	private boolean coreCommand = false;
 
-	@Setter
+	public void setRunAsync(boolean runAsync) {
+		this.runAsync = runAsync;
+	}
+
+	public void setCoreCommand(boolean coreCommand) {
+		this.coreCommand = coreCommand;
+	}
+
+	public void setMinArgs(int minArgs) {
+		this.minArgs = minArgs;
+	}
+
 	private int minArgs = 0;
 
 	/**
@@ -63,7 +72,7 @@ public abstract class BATCommand extends net.md_5.bungee.api.plugin.Command impl
 		this.permission = permission;
 		this.description = description;
 
-		
+
 		// Compute min args
 		final Matcher matcher = pattern.matcher(syntax);
 		while (matcher.find()) {
@@ -74,7 +83,7 @@ public abstract class BATCommand extends net.md_5.bungee.api.plugin.Command impl
 		if (asyncAnnot != null) {
 			runAsync = true;
 		}
-		
+
 		if(CoreCommand.class.equals(getClass().getEnclosingClass())){
 			coreCommand = true;
 		}
@@ -92,7 +101,7 @@ public abstract class BATCommand extends net.md_5.bungee.api.plugin.Command impl
 	public String getSyntax(){
 		return syntax;
 	}
-	
+
 	/**
 	 * Get a nice coloured usage
 	 * 
@@ -105,7 +114,7 @@ public abstract class BATCommand extends net.md_5.bungee.api.plugin.Command impl
 	public String getBATPermission(){
 		return permission;
 	}
-	
+
 	public void handleCommandException(final CommandSender sender, final Exception exception){
 		if(exception instanceof IllegalArgumentException){
 			if (exception.getMessage() == null) {
@@ -132,7 +141,7 @@ public abstract class BATCommand extends net.md_5.bungee.api.plugin.Command impl
 			exception.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void execute(final CommandSender sender, final String[] args) {
 		// If the sender doesn't have the permission, we're gonna check if he has this permission with children permission
@@ -208,28 +217,28 @@ public abstract class BATCommand extends net.md_5.bungee.api.plugin.Command impl
 		}
 		final String playerToCheck = args[args.length - 1];
 		if (playerToCheck.length() > 0) {
-		    	if (BAT.getInstance().getRedis().isRedisEnabled()) {
-		    	    	for (final String player : RedisBungee.getApi().getHumanPlayersOnline()) {
-		    	    	    	if (player
-		    	    	    		.substring(
-		    	    	    				0,
-		    	    	    				(playerToCheck.length() < player.length()) ? playerToCheck.length() : player
-		    	    	    					.length()).equalsIgnoreCase(playerToCheck)) {
-		    	    	    		result.add(player);
-		    	    		}
-		    	    	}
-		    	} else {
-		    	    	for (final ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+			if (BAT.getInstance().getRedis().isRedisEnabled()) {
+				for (final String player : RedisBungee.getApi().getHumanPlayersOnline()) {
+					if (player
+							.substring(
+									0,
+									(playerToCheck.length() < player.length()) ? playerToCheck.length() : player
+											.length()).equalsIgnoreCase(playerToCheck)) {
+						result.add(player);
+					}
+				}
+			} else {
+				for (final ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
 					if (player
 							.getName()
 							.substring(
 									0,
 									(playerToCheck.length() < player.getName().length()) ? playerToCheck.length() : player
-										.getName().length()).equalsIgnoreCase(playerToCheck)) {
+											.getName().length()).equalsIgnoreCase(playerToCheck)) {
 						result.add(player.getName());
 					}
 				}
-		    	}
+			}
 		}
 		return result;
 	}
@@ -252,7 +261,7 @@ public abstract class BATCommand extends net.md_5.bungee.api.plugin.Command impl
 	@Target(ElementType.TYPE)
 	public @interface Disable {
 	}
-	
+
 	/* Utils for command */
 	/**
 	 * Check if the sender is a player <br>
@@ -270,7 +279,7 @@ public abstract class BATCommand extends net.md_5.bungee.api.plugin.Command impl
 
 	public void mustConfirmCommand(final CommandSender sender, final String command, final String message) {
 		final String cmdToConfirm = (BAT.getInstance().getConfiguration().getSimpleAliasesCommands().get("confirm"))
-		        ? "confirm" : "bat confirm";
+				? "confirm" : "bat confirm";
 		if (!CommandQueue.isExecutingQueueCommand(sender)) {
 			if ("".equals(message)) {
 				sender.sendMessage(__("mustConfirm", new String[] { "", cmdToConfirm }));

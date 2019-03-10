@@ -16,14 +16,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
-import lombok.Getter;
-import net.cubespace.Yamler.Config.InvalidConfigurationException;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
-
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
@@ -51,13 +43,20 @@ import fr.Alphart.BAT.Utils.CallbackUtils.ProgressCallback;
 import fr.Alphart.BAT.Utils.FormatUtils;
 import fr.Alphart.BAT.Utils.Utils;
 import fr.Alphart.BAT.database.DataSourceHandler;
+import lombok.Getter;
+import net.cubespace.Yamler.Config.InvalidConfigurationException;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class CoreCommand extends BATCommand{
 	private final BaseComponent[] CREDIT;
 	private final BaseComponent[] HELP_MSG;
 	private final Map<List<String>, BATCommand> subCmd;
 
-	
+
 	public CoreCommand(final Core coreModule) {
 		super("bat", "", "", null);
 		final Map<String, Boolean> simpleAliasesCommands = BAT.getInstance().getConfiguration().getSimpleAliasesCommands();
@@ -65,7 +64,7 @@ public class CoreCommand extends BATCommand{
 		CREDIT = TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes(
 				'&', "&9Bungee&fAdmin&cTools&a Version {version}&e - Developed by &aAlphart")
 				.replace("{version}", BAT.getInstance().getDescription().getVersion()));
-		
+
 		// Dynamic commands load, commands are not configurable as with other modules
 		final List<String> cmdsList = Lists.newArrayList();
 		for (final Class<?> subClass : CoreCommand.this.getClass().getDeclaredClasses()) {
@@ -86,38 +85,38 @@ public class CoreCommand extends BATCommand{
 				e.printStackTrace();
 			}
 		}
-		
+
 		Collections.sort(cmdsList);
-        // Add new commands if there are
-        for (final String cmdName : cmdsList) {
-            if (!simpleAliasesCommands.containsKey(cmdName)) {
-                simpleAliasesCommands.put(cmdName, false);
-            }
-        }
-        // Iterate through the commands map and remove the ones who don't exist (e.g because of an update)
-        for(final Iterator<Map.Entry<String, Boolean>> it = simpleAliasesCommands.entrySet().iterator(); it.hasNext();){
-            final Map.Entry<String, Boolean> cmdEntry = it.next();
-            if(!cmdsList.contains(cmdEntry.getKey())){
-                it.remove();
-            }
-        }
-        try {
-            BAT.getInstance().getConfiguration().save();
-        } catch (InvalidConfigurationException e) {
-            BAT.getInstance().getLogger().log(Level.SEVERE, "Error while saving simpleAliasesCmds", e);
-        }
-        // Register command either as subcommand or as simple alias
-        for(final Iterator<Map.Entry<List<String>, BATCommand>> it = subCmd.entrySet().iterator(); it.hasNext();){
-            final Map.Entry<List<String>, BATCommand> cmdEntry = it.next();
-            if(simpleAliasesCommands.get(cmdEntry.getValue().getName())){
-                coreModule.addCommand(cmdEntry.getValue());
-                it.remove();
-            }
-            // Otherwise, do nothing just let the command in the subcommand map
-        }
-        
-        HELP_MSG = TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', 
-                "&eType &6" + ((simpleAliasesCommands.get("help")) ? "/help" : "/bat help") + "&e to get help"));
+		// Add new commands if there are
+		for (final String cmdName : cmdsList) {
+			if (!simpleAliasesCommands.containsKey(cmdName)) {
+				simpleAliasesCommands.put(cmdName, false);
+			}
+		}
+		// Iterate through the commands map and remove the ones who don't exist (e.g because of an update)
+		for(final Iterator<Map.Entry<String, Boolean>> it = simpleAliasesCommands.entrySet().iterator(); it.hasNext();){
+			final Map.Entry<String, Boolean> cmdEntry = it.next();
+			if(!cmdsList.contains(cmdEntry.getKey())){
+				it.remove();
+			}
+		}
+		try {
+			BAT.getInstance().getConfiguration().save();
+		} catch (InvalidConfigurationException e) {
+			BAT.getInstance().getLogger().log(Level.SEVERE, "Error while saving simpleAliasesCmds", e);
+		}
+		// Register command either as subcommand or as simple alias
+		for(final Iterator<Map.Entry<List<String>, BATCommand>> it = subCmd.entrySet().iterator(); it.hasNext();){
+			final Map.Entry<List<String>, BATCommand> cmdEntry = it.next();
+			if(simpleAliasesCommands.get(cmdEntry.getValue().getName())){
+				coreModule.addCommand(cmdEntry.getValue());
+				it.remove();
+			}
+			// Otherwise, do nothing just let the command in the subcommand map
+		}
+
+		HELP_MSG = TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', 
+				"&eType &6" + ((simpleAliasesCommands.get("help")) ? "/help" : "/bat help") + "&e to get help"));
 	}
 
 	public List<BATCommand> getSubCmd() {
@@ -146,7 +145,7 @@ public class CoreCommand extends BATCommand{
 				for (int i = 1; i < args.length; i++) {
 					cleanArgs[i - 1] = args[i];
 				}
-				
+
 				if (cmd.getBATPermission().isEmpty() || sender.hasPermission(cmd.getBATPermission()) || sender.hasPermission("bat.admin")) {
 					cmd.execute(sender, cleanArgs);
 				} else {
@@ -157,7 +156,7 @@ public class CoreCommand extends BATCommand{
 			}
 		}
 	}
-	
+
 	public static class HelpCmd extends BATCommand {
 		public HelpCmd() {
 			super("help", "", "Displays help for core BAT commands.", "bat.help");
@@ -171,7 +170,7 @@ public class CoreCommand extends BATCommand{
 				if (cmd instanceof CoreCommand) {
 					cmdsList.addAll(((CoreCommand) cmd).getSubCmd());
 				}else{
-				    cmdsList.add(cmd);
+					cmdsList.add(cmd);
 				}
 			}
 			FormatUtils.showFormattedHelp(cmdsList, sender, "CORE");
@@ -236,13 +235,23 @@ public class CoreCommand extends BATCommand{
 			sender.sendMessage(BAT.__("Reload successfully executed ..."));
 		}
 	}
-	
+
 	@RunAsync
 	public static class LookupCmd extends BATCommand {
-	    @Getter
+		@Getter
 		private static LookupFormatter lookupFormatter;
 		private ModulesManager modules;
-		
+
+
+
+		public static LookupFormatter getLookupFormatter() {
+			return lookupFormatter;
+		}
+
+		public ModulesManager getModules() {
+			return modules;
+		}
+
 		public LookupCmd() {
 			super("lookup", "<player/ip> [module] [page]", "Displays a player or an ip related information (universal or per module).", Action.LOOKUP.getPermission());
 			modules = BAT.getInstance().getModules();
@@ -289,8 +298,8 @@ public class CoreCommand extends BATCommand{
 						}else{
 							message = new ArrayList<BaseComponent[]>();
 							message.add(BAT.__((!Utils.validIP(entity))
-										? "&eThe player &a" + entity + "&e has never been banned."
-										: "&eThe IP &a" + entity + "&e has never been banned."));
+									? "&eThe player &a" + entity + "&e has never been banned."
+											: "&eThe IP &a" + entity + "&e has never been banned."));
 						}
 						break;
 					case "mute":
@@ -300,8 +309,8 @@ public class CoreCommand extends BATCommand{
 						}else{
 							message = new ArrayList<BaseComponent[]>();
 							message.add(BAT.__((!Utils.validIP(entity))
-										? "&eThe player &a" + entity + "&e has never been muted."
-										: "&eThe IP &a" + entity + "&e has never been muted."));
+									? "&eThe player &a" + entity + "&e has never been muted."
+											: "&eThe IP &a" + entity + "&e has never been muted."));
 						}
 						break;
 					case "kick":
@@ -311,8 +320,8 @@ public class CoreCommand extends BATCommand{
 						}else{
 							message = new ArrayList<BaseComponent[]>();
 							message.add(BAT.__((!Utils.validIP(entity))
-										? "&eThe player &a" + entity + "&e has never been kicked."
-										: "&eThe IP &a" + entity + "&e has never been kicked."));
+									? "&eThe player &a" + entity + "&e has never been kicked."
+											: "&eThe IP &a" + entity + "&e has never been kicked."));
 						}
 						break;
 					case "comment":
@@ -322,14 +331,14 @@ public class CoreCommand extends BATCommand{
 						}else{
 							message = new ArrayList<BaseComponent[]>();
 							message.add(BAT.__((!Utils.validIP(entity))
-										? "&eThe player &a" + entity + "&e has no comment about him."
-										: "&eThe IP &a" + entity + "&e has no comment."));
+									? "&eThe player &a" + entity + "&e has no comment about him."
+											: "&eThe IP &a" + entity + "&e has no comment."));
 						}
 						break;
 					default:
 						throw new InvalidModuleException("Module not found or invalid");
 					}
-					
+
 					for (final BaseComponent[] msg : message) {
 						sender.sendMessage(msg);
 					}			
@@ -340,11 +349,11 @@ public class CoreCommand extends BATCommand{
 		}
 
 	}
-		
+
 	@RunAsync
 	public static class StaffLookupCmd extends BATCommand {
 		private final ModulesManager modules;
-		
+
 		public StaffLookupCmd() {
 			super("stafflookup", "<staff> [module] [page]", "Displays a staff member history (universal or per module).", "bat.stafflookup");
 			modules = BAT.getInstance().getModules();
@@ -355,7 +364,7 @@ public class CoreCommand extends BATCommand{
 			final String entity = args[0];
 			if(args.length == 1){
 				for (final BaseComponent[] msg : LookupCmd.getLookupFormatter().getSummaryStaffLookup(entity, 
-				        sender.hasPermission(Action.LOOKUP.getPermission() + ".displayip"))) {
+						sender.hasPermission(Action.LOOKUP.getPermission() + ".displayip"))) {
 					sender.sendMessage(msg);
 				}
 			}
@@ -413,7 +422,7 @@ public class CoreCommand extends BATCommand{
 					default:
 						throw new InvalidModuleException("Module not found or invalid");
 					}
-					
+
 					for (final BaseComponent[] msg : message) {
 						sender.sendMessage(msg);
 					}			
@@ -423,7 +432,7 @@ public class CoreCommand extends BATCommand{
 			}
 		}
 	}
-	
+
 	public static class ConfirmCmd extends BATCommand {
 		public ConfirmCmd() {
 			super("confirm", "", "Confirm your queued command.", "");
@@ -441,70 +450,72 @@ public class CoreCommand extends BATCommand{
 
 	@RunAsync
 	public static class ImportCmd extends BATCommand{
-	    private final static Map<String, Importer> importers = new HashMap<String, Importer>(){{
-            put("bungeeSuiteBans", new BungeeSuiteImporter());
-            put("geSuitBans", new GeSuiteImporter());
-            put("MC-Previous1.7.8", new MinecraftPreUUIDImporter());
-            put("BanHammer", new BanHammerImporter());
-            put("BATSQLite", new SQLiteMigrater());
-            put("MC-Post1.7.8", new MinecraftUUIDImporter());
-	    }};
-	    
-		public ImportCmd() { 
-		    super("import", "<" + Joiner.on('/').join(importers.keySet()) + ">", "Imports ban data from the specified source. Available sources : &a" 
-		            + Joiner.on("&e,&a").join(importers.keySet()), "bat.import");
-		}
+		private final static Map<String, Importer> importers = new HashMap<String, Importer>(){
+			private static final long serialVersionUID = 1L;
+			{
+				put("bungeeSuiteBans", new BungeeSuiteImporter());
+				put("geSuitBans", new GeSuiteImporter());
+				put("MC-Previous1.7.8", new MinecraftPreUUIDImporter());
+				put("BanHammer", new BanHammerImporter());
+				put("BATSQLite", new SQLiteMigrater());
+				put("MC-Post1.7.8", new MinecraftUUIDImporter());
+			}};
 
-		@Override
-		public void onCommand(final CommandSender sender, final String[] args, final boolean confirmedCmd)
-				throws IllegalArgumentException {
-		    checkArgument(BAT.getInstance().getConfiguration().isMysql_enabled(), "You must use MySQL in order to use the import function.");
-			final String source = args[0];
-			
-			final Importer importer = importers.get(source);
-			if(importer != null){
-			    sender.sendMessage(BAT.__("BAT will be disabled during the import ..."));
-			    BAT.getInstance().getModules().unloadModules();
-			    
-                importer.startImport(new ProgressCallback<Importer.ImportStatus>() {
-                    @Override
-                    public void done(ImportStatus result, Throwable throwable) {
-                        if(throwable != null){
-                            if(throwable instanceof RuntimeException){
-                                sender.sendMessage(BAT.__("An error (" + throwable.getMessage()
-                                        + ") has occured during the import. Please check the logs"));
-                                throwable.printStackTrace();
-                            }else{
-                                sender.sendMessage(BAT.__("An error has occured during the import. Please check the logs"));
-                                BAT.getInstance().getLogger().severe("An error has occured during the import of data from " + source 
-                                        + ". Please report this :");
-                                throwable.printStackTrace();
-                            }
-                        }else{
-                            sender.sendMessage(BAT.__("Congratulations, the migration is finished. &a" 
-                                    + result.getConvertedEntries() + " entries&e were converted successfully."));
-                        }
-                        BAT.getInstance().getModules().loadModules();
-                        sender.sendMessage(BAT.__("BAT is now reenabled ..."));
-                    }
-                    
-                    @Override
-                    public void onProgress(ImportStatus progressStatus) {
-                        sender.sendMessage(BAT.__("&a" + new DecimalFormat("0.00").format(progressStatus.getProgressionPercent()) 
-                                + "%&e entries converted !&a" + (progressStatus.getRemainingEntries()) 
-                                + "&e remaining entries on a total of &6" + progressStatus.getTotalEntries()));
-                    }
-                    
-                    @Override
-                    public void onMinorError(String errorMessage) {
-                        sender.sendMessage(BAT.__(errorMessage));
-                    }
-                }, Utils.getFinalArg(args, 1));
-			}else{
-			    throw new IllegalArgumentException("The specified source is incorrect. Available sources : &a" 
-	                + Joiner.on("&e,&a").join(importers.keySet()));
+			public ImportCmd() { 
+				super("import", "<" + Joiner.on('/').join(importers.keySet()) + ">", "Imports ban data from the specified source. Available sources : &a" 
+						+ Joiner.on("&e,&a").join(importers.keySet()), "bat.import");
 			}
-		}
+
+			@Override
+			public void onCommand(final CommandSender sender, final String[] args, final boolean confirmedCmd)
+					throws IllegalArgumentException {
+				checkArgument(BAT.getInstance().getConfiguration().isMysql_enabled(), "You must use MySQL in order to use the import function.");
+				final String source = args[0];
+
+				final Importer importer = importers.get(source);
+				if(importer != null){
+					sender.sendMessage(BAT.__("BAT will be disabled during the import ..."));
+					BAT.getInstance().getModules().unloadModules();
+
+					importer.startImport(new ProgressCallback<Importer.ImportStatus>() {
+						@Override
+						public void done(ImportStatus result, Throwable throwable) {
+							if(throwable != null){
+								if(throwable instanceof RuntimeException){
+									sender.sendMessage(BAT.__("An error (" + throwable.getMessage()
+									+ ") has occured during the import. Please check the logs"));
+									throwable.printStackTrace();
+								}else{
+									sender.sendMessage(BAT.__("An error has occured during the import. Please check the logs"));
+									BAT.getInstance().getLogger().severe("An error has occured during the import of data from " + source 
+											+ ". Please report this :");
+									throwable.printStackTrace();
+								}
+							}else{
+								sender.sendMessage(BAT.__("Congratulations, the migration is finished. &a" 
+										+ result.getConvertedEntries() + " entries&e were converted successfully."));
+							}
+							BAT.getInstance().getModules().loadModules();
+							sender.sendMessage(BAT.__("BAT is now reenabled ..."));
+						}
+
+						@Override
+						public void onProgress(ImportStatus progressStatus) {
+							sender.sendMessage(BAT.__("&a" + new DecimalFormat("0.00").format(progressStatus.getProgressionPercent()) 
+									+ "%&e entries converted !&a" + (progressStatus.getRemainingEntries()) 
+									+ "&e remaining entries on a total of &6" + progressStatus.getTotalEntries()));
+						}
+
+						@Override
+						public void onMinorError(String errorMessage) {
+							sender.sendMessage(BAT.__(errorMessage));
+						}
+					}, Utils.getFinalArg(args, 1));
+				}else{
+					throw new IllegalArgumentException("The specified source is incorrect. Available sources : &a" 
+							+ Joiner.on("&e,&a").join(importers.keySet()));
+				}
+			}
 	}
 
 	public static class BackupCmd extends BATCommand{
@@ -526,16 +537,16 @@ public class CoreCommand extends BATCommand{
 			});
 		}
 	}
-	
+
 	@RunAsync
 	public static class MigrateCmd extends BATCommand {
 		public MigrateCmd() { super("migrateToMysql", "", "Migrate from sqlite to mysql (one-way conversion)", "bat.import");}
 
 		@Override
 		public void onCommand(final CommandSender sender, final String[] args, final boolean confirmedCmd) throws IllegalArgumentException {
-		    boolean isImportSimpleAlias = BAT.getInstance().getConfiguration().getSimpleAliasesCommands().get("import");
+			boolean isImportSimpleAlias = BAT.getInstance().getConfiguration().getSimpleAliasesCommands().get("import");
 			ProxyServer.getInstance().getPluginManager().dispatchCommand(sender, 
-			        ((!isImportSimpleAlias) ? "bat " : "") + "import BATSQLite");
+					((!isImportSimpleAlias) ? "bat " : "") + "import BATSQLite");
 		}
 
 	}

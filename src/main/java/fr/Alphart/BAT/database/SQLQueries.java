@@ -24,11 +24,11 @@ public class SQLQueries {
 
 		public static class SQLite {
 			public final static String[] createTable = {
-				"CREATE TABLE IF NOT EXISTS `" + table + "` (" + "`kick_id` INTEGER PRIMARY KEY AUTOINCREMENT,"
-						+ "`UUID` varchar(100) NOT NULL," + "`kick_staff` varchar(30) NOT NULL,"
-						+ "`kick_reason` varchar(100) NULL," + "`kick_server` varchar(30) NOT NULL,"
-						+ "`kick_date` timestamp NOT NULL" + ");",
-						"CREATE INDEX IF NOT EXISTS `kick.uuid_index` ON " + table + " (`UUID`);" };
+					"CREATE TABLE IF NOT EXISTS `" + table + "` (" + "`kick_id` INTEGER PRIMARY KEY AUTOINCREMENT,"
+							+ "`UUID` varchar(100) NOT NULL," + "`kick_staff` varchar(30) NOT NULL,"
+							+ "`kick_reason` varchar(100) NULL," + "`kick_server` varchar(30) NOT NULL,"
+							+ "`kick_date` timestamp NOT NULL" + ");",
+							"CREATE INDEX IF NOT EXISTS `kick.uuid_index` ON " + table + " (`UUID`);" };
 			public final static String kickPlayer = "INSERT INTO `" + table
 					+ "`(UUID, kick_staff, kick_reason, kick_server, kick_date) VALUES (?, ?, ?, ?, date());";
 			public static final String getKick = "SELECT kick_server, kick_reason, kick_staff, strftime('%s',kick_date) FROM `" + table
@@ -91,18 +91,18 @@ public class SQLQueries {
 
 		public static final String getManagedBan = "SELECT * FROM `"
 				+ table + "`" + " WHERE ban_staff = ? OR ban_unbanstaff = ? ORDER BY ban_state DESC, ban_end DESC;";
-		
+
 		public static final String getBanMessage = "SELECT ban_reason, ban_end, ban_staff, ban_begin FROM `" 
 				+ table + "` WHERE (UUID = ? OR ban_ip = ?) AND ban_state = 1 AND ban_server = ?;";
-		
+
 		public static final String updateExpiredBan = "UPDATE `" + table + "` SET ban_state = 0 "
 				+ "WHERE ban_state = 1 AND (ban_end != 0 AND ban_end < NOW());";
 
 		public static class SQLite {
 			// Ban related
 			public final static String[] createTable = {
-				"CREATE TABLE IF NOT EXISTS `" + table + "` (" + "`ban_id` INTEGER PRIMARY KEY AUTOINCREMENT,"
-						+ "`UUID` varchar(100) NULL," + "`ban_ip` varchar(50) NULL,"
+					"CREATE TABLE IF NOT EXISTS `" + table + "` (" + "`ban_id` INTEGER PRIMARY KEY AUTOINCREMENT,"
+							+ "`UUID` varchar(100) NULL," + "`ban_ip` varchar(50) NULL,"
 
 							+ "`ban_staff` varchar(30) NOT NULL," + "`ban_reason` varchar(100) NULL,"
 							+ "`ban_server` varchar(30) NOT NULL,"
@@ -113,7 +113,7 @@ public class SQLQueries {
 							+ "`ban_unbanreason` varchar(100) NULL" + ");",
 							"CREATE INDEX IF NOT EXISTS `ban.uuid_index` ON " + table + " (`UUID`);",
 							"CREATE INDEX IF NOT EXISTS `ban.ip_index` ON " + table + " (`ban_ip`);" };
-			
+
 			public static final String unBan = "UPDATE `" + table
 					+ "` SET ban_state = 0, ban_unbanreason = ?, ban_unbanstaff = ?, ban_unbandate = datetime() "
 					+ "WHERE UUID = ? AND ban_state = 1;";
@@ -126,21 +126,21 @@ public class SQLQueries {
 			public static final String unBanServer = "UPDATE `" + table
 					+ "` SET ban_state = 0, ban_unbanreason = ?, ban_unbanstaff = ?, ban_unbandate = datetime() "
 					+ "WHERE UUID = ? AND ban_server = ? AND ban_state = 1;";
-			
+
 			public static final String getBan = "SELECT *, "
 					+ "strftime('%s',ban_begin), strftime('%s',ban_end), strftime('%s',ban_unbandate) "
 					+ "FROM `" + table + "`" + " WHERE UUID = ? ORDER BY ban_state DESC, ban_end DESC;";
 			public static final String getBanIP = "SELECT *, "
 					+ "strftime('%s',ban_begin), strftime('%s',ban_end), strftime('%s',ban_unbandate) "
 					+ "FROM `" + table + "`" + " WHERE ban_ip = ? AND UUID IS NULL ORDER BY ban_state DESC, ban_end DESC;";
-			
+
 			public static final String getBanMessage = "SELECT ban_reason, ban_staff, ban_end, strftime('%s',ban_begin) FROM `" 
 					+ table + "` WHERE (UUID = ? OR ban_ip = ?) AND ban_state = 1 AND ban_server = ?;";
-			
+
 			public static final String getManagedBan = "SELECT *, "
 					+ "strftime('%s',ban_begin), strftime('%s',ban_end), strftime('%s',ban_unbandate) "
 					+ "FROM `" + table + "`" + " WHERE ban_staff = ? OR ban_unbanstaff = ? ORDER BY ban_state DESC, ban_end DESC;";
-			
+
 			public static final String updateExpiredBan = "UPDATE `" + table + "` SET ban_state = 0 "
 					+ "WHERE ban_state = 1 AND (ban_end != 0 AND (ban_end / 1000) < CAST(strftime('%s', 'now') as integer));";
 		}
@@ -197,17 +197,17 @@ public class SQLQueries {
 
 		public static final String getManagedMute = "SELECT * FROM `"
 				+ table + "`" + " WHERE mute_staff = ? OR mute_unmutestaff = ? ORDER BY mute_state DESC, mute_end DESC;";
-		
+
 		public static final String getMuteMessage = "SELECT mute_reason, mute_end, mute_staff, mute_begin FROM `" 
 				+ table + "` WHERE (UUID = ? OR mute_ip = ?) AND mute_state = 1 AND mute_server = ?;";
-		
+
 		public static final String updateExpiredMute = "UPDATE `" + table + "` SET mute_state = 0 "
 				+ "WHERE mute_state = 1 AND (mute_end != 0 AND mute_end < NOW());";
 
 		public static class SQLite {
 			public final static String[] createTable = {
-				"CREATE TABLE IF NOT EXISTS `" + table + "` (" + "`mute_id` INTEGER PRIMARY KEY AUTOINCREMENT,"
-						+ "`UUID` varchar(100) NULL," + "`mute_ip` varchar(50) NULL,"
+					"CREATE TABLE IF NOT EXISTS `" + table + "` (" + "`mute_id` INTEGER PRIMARY KEY AUTOINCREMENT,"
+							+ "`UUID` varchar(100) NULL," + "`mute_ip` varchar(50) NULL,"
 
 							+ "`mute_staff` varchar(30) NOT NULL," + "`mute_reason` varchar(100) NULL,"
 							+ "`mute_server` varchar(30) NOT NULL,"
@@ -242,14 +242,14 @@ public class SQLQueries {
 			public static final String getMuteIP = "SELECT *, "
 					+ "strftime('%s',mute_begin), strftime('%s',mute_end), strftime('%s',mute_unmutedate)"
 					+ "FROM `" + table + "`" + " WHERE mute_ip = ? AND UUID IS NULL ORDER BY mute_state DESC, mute_end DESC;";
-			
+
 			public static final String getManagedMute = "SELECT *, "
 					+ "strftime('%s',mute_begin), strftime('%s',mute_end), strftime('%s',mute_unmutedate) "
 					+ "FROM `" + table + "`" + " WHERE mute_staff = ? OR mute_unmutestaff = ? ORDER BY mute_state DESC, mute_end DESC;";
-			
+
 			public static final String getMuteMessage = "SELECT mute_reason, mute_staff, strftime('%s',mute_begin), mute_end FROM `" 
 					+ table + "` WHERE (UUID = ? OR mute_ip = ?) AND mute_state = 1 AND mute_server = ?;";
-			
+
 			public static final String updateExpiredMute = "UPDATE `" + table + "` SET mute_state = 0 "
 					+ "WHERE mute_state = 1 AND mute_end != 0 AND (mute_end / 1000) < CAST(strftime('%s', 'now') as integer);";
 		}
@@ -257,54 +257,54 @@ public class SQLQueries {
 
 	public static class Comments{
 		public static final String table = "bat_comments";
-		
+
 		public static final String createTable = "CREATE TABLE IF NOT EXISTS `" + table + "` ("
-		+ "`id` int(11) NOT NULL AUTO_INCREMENT,"
-		+ "`entity` varchar(100) NOT NULL,"
-		+ "`note` varchar(255) NOT NULL,"
-		+ "`type` varchar(7) NOT NULL,"
-		+ "`staff` varchar(30) NOT NULL,"
-		+ "`date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
-		+ "PRIMARY KEY (`id`),"
-		+ "INDEX(entity)"
-		+ ") ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
-		
-		public static final String insertEntry = "INSERT INTO `" + table + "` (entity, note, type, staff)"
-				+ "VALUES (?, ?, ?, ?);";
-		
-		public static final String getEntries = "SELECT id, note, type, staff, date FROM `" + table + "` "
-				+ "WHERE entity = ? ORDER BY date DESC;";
-		public static final String getManagedEntries = "SELECT id, note, type, date, entity FROM `" + table + "` "
-				+ "WHERE staff = ? ORDER BY date DESC;";
-		
-		public static final String getMostRecentCommentDate = "SELECT date FROM `" + table + "` WHERE entity = ? ORDER BY date DESC";
-		
-		public static final String clearEntries = "DELETE FROM `" + table + "` WHERE entity = ?;";
-		
-		public static final String clearByID = "DELETE FROM `" + table + "` WHERE entity = ? AND id = ?;";
-		
-		public static final String simpleTriggerCheck = "SELECT COUNT(*) FROM `" + table + "` WHERE entity = ?;";
-		public static final String patternTriggerCheck = "SELECT COUNT(*) FROM `" + table + "` WHERE entity = ? && note LIKE ?;";
-		
-		public static class SQLite{
-			public static final String createTable[] = {
-				"CREATE TABLE IF NOT EXISTS `" + table + "` ("
-				+ "`id` INTEGER PRIMARY KEY AUTOINCREMENT,"
+				+ "`id` int(11) NOT NULL AUTO_INCREMENT,"
 				+ "`entity` varchar(100) NOT NULL,"
 				+ "`note` varchar(255) NOT NULL,"
 				+ "`type` varchar(7) NOT NULL,"
 				+ "`staff` varchar(30) NOT NULL,"
-				+ "`date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP"
-				+ ");",
-				"CREATE INDEX IF NOT EXISTS `comments.entity_index` ON " + table + " (`entity`);" };
-			
+				+ "`date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
+				+ "PRIMARY KEY (`id`),"
+				+ "INDEX(entity)"
+				+ ") ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
+
+		public static final String insertEntry = "INSERT INTO `" + table + "` (entity, note, type, staff)"
+				+ "VALUES (?, ?, ?, ?);";
+
+		public static final String getEntries = "SELECT id, note, type, staff, date FROM `" + table + "` "
+				+ "WHERE entity = ? ORDER BY date DESC;";
+		public static final String getManagedEntries = "SELECT id, note, type, date, entity FROM `" + table + "` "
+				+ "WHERE staff = ? ORDER BY date DESC;";
+
+		public static final String getMostRecentCommentDate = "SELECT date FROM `" + table + "` WHERE entity = ? ORDER BY date DESC";
+
+		public static final String clearEntries = "DELETE FROM `" + table + "` WHERE entity = ?;";
+
+		public static final String clearByID = "DELETE FROM `" + table + "` WHERE entity = ? AND id = ?;";
+
+		public static final String simpleTriggerCheck = "SELECT COUNT(*) FROM `" + table + "` WHERE entity = ?;";
+		public static final String patternTriggerCheck = "SELECT COUNT(*) FROM `" + table + "` WHERE entity = ? && note LIKE ?;";
+
+		public static class SQLite{
+			public static final String createTable[] = {
+					"CREATE TABLE IF NOT EXISTS `" + table + "` ("
+							+ "`id` INTEGER PRIMARY KEY AUTOINCREMENT,"
+							+ "`entity` varchar(100) NOT NULL,"
+							+ "`note` varchar(255) NOT NULL,"
+							+ "`type` varchar(7) NOT NULL,"
+							+ "`staff` varchar(30) NOT NULL,"
+							+ "`date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP"
+							+ ");",
+							"CREATE INDEX IF NOT EXISTS `comments.entity_index` ON " + table + " (`entity`);" };
+
 			public static final String getEntries = "SELECT id, note, type, staff, strftime('%s',date) FROM `" + table + "` "
 					+ "WHERE entity = ? ORDER BY date DESC;";
 			public static final String getManagedEntries = "SELECT id, note, type, strftime('%s',date), entity FROM `" + table + "` "
 					+ "WHERE staff = ? ORDER BY date DESC;";
 		}
 	}
-	
+
 	public static class Core {
 		public static final String table = "BAT_players";
 
@@ -317,7 +317,7 @@ public class SQLQueries {
 				+ " VALUES (?, ?, NOW(), ?) ON DUPLICATE KEY UPDATE lastip = ?, lastlogin = NOW(), BAT_player = ?;";
 
 		public static final String getPlayerName = "SELECT BAT_player FROM `" + table + "` WHERE UUID = ?;";
-		
+
 		public static final String getIP = "SELECT lastip FROM `" + table + "` WHERE UUID = ?;";
 
 		public static final String getUUID = "SELECT UUID FROM `" + table + "` WHERE BAT_player = ?;";
@@ -329,11 +329,11 @@ public class SQLQueries {
 
 		public static class SQLite {
 			public static final String createTable[] = {
-				"CREATE TABLE IF NOT EXISTS `" + table + "` (" + "`BAT_player` varchar(30) NOT NULL,"
-						+ "`UUID` varchar(100) UNIQUE NOT NULL," + "`lastip` varchar(50) NOT NULL,"
-						+ "`firstlogin` timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,"
-						+ "`lastlogin` timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL" + ");",
-						"CREATE INDEX IF NOT EXISTS `core.player_index` ON " + table + " (`BAT_player`);" };
+					"CREATE TABLE IF NOT EXISTS `" + table + "` (" + "`BAT_player` varchar(30) NOT NULL,"
+							+ "`UUID` varchar(100) UNIQUE NOT NULL," + "`lastip` varchar(50) NOT NULL,"
+							+ "`firstlogin` timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,"
+							+ "`lastlogin` timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL" + ");",
+							"CREATE INDEX IF NOT EXISTS `core.player_index` ON " + table + " (`BAT_player`);" };
 			public static final String updateIPUUID = "INSERT OR REPLACE INTO `" + table
 					+ "` (BAT_player, lastip, firstlogin, lastlogin, UUID)"
 					+ " VALUES (?, ?, (SELECT firstlogin FROM `" + table + "` WHERE UUID = ?), DATETIME(), ?);";

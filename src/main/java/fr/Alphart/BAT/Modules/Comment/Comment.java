@@ -96,6 +96,9 @@ public class Comment implements IModule{
 
 	public class CommentConfig extends ModuleConfiguration {
 		public CommentConfig() {
+			
+			
+			
 			try {
                 initThrowingExceptions(name);
             } catch (InvalidConfigurationException e) {
@@ -126,6 +129,14 @@ public class Comment implements IModule{
             }
 		}
 		
+		public Map<String, Trigger> getTriggers() {
+			return triggers;
+		}
+
+		public int getCooldown() {
+			return cooldown;
+		}
+
 		@net.cubespace.Yamler.Config.Comments({"Triggers list",
 			"Trigger name:",
 			"  pattern: reason which must be provided to trigger this",

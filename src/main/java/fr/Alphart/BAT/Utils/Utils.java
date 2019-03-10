@@ -1,11 +1,5 @@
 package fr.Alphart.BAT.Utils;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,8 +11,15 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+
 public class Utils {
-    private static Gson gson = new Gson();
+	private static Gson gson = new Gson();
 	private static StringBuilder sb = new StringBuilder();
 	private static Pattern ipPattern = Pattern
 			.compile("(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)");
@@ -165,18 +166,20 @@ public class Utils {
 			while((line = reader.readLine()) != null){
 				content += line;
 			}
-			final Map<String, Object> attributes = gson.fromJson(content, new TypeToken<Map<String, Object>>() {}.getType());
+			final Map<String, Object> attributes = gson.fromJson(content, new TypeToken<Map<String, Object>>() {
+
+				private static final long serialVersionUID = 1L;}.getType());
 			String city = !((String)attributes.get("city")).isEmpty()
 					? (String)attributes.get("city")
-					: "unknown";
-			String country = !((String)attributes.get("country")).isEmpty()
-					? (String)attributes.get("country")
-					: "unknown";
-			String country_code = !((String)attributes.get("countryCode")).isEmpty()
-					? (String)attributes.get("countryCode")
-					: "unknown";
-			return "&7City: &f" + city + "&7 Country: &f" + country +
-					" &e(&f" + country_code + "&e)";
+							: "unknown";
+					String country = !((String)attributes.get("country")).isEmpty()
+							? (String)attributes.get("country")
+									: "unknown";
+							String country_code = !((String)attributes.get("countryCode")).isEmpty()
+									? (String)attributes.get("countryCode")
+											: "unknown";
+									return "&7City: &f" + city + "&7 Country: &f" + country +
+											" &e(&f" + country_code + "&e)";
 		}catch(final IOException e){
 			throw new RuntimeException(e);
 		}finally{

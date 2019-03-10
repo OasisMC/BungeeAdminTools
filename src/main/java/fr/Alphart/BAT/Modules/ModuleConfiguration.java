@@ -9,34 +9,32 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import lombok.Getter;
-import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import fr.Alphart.BAT.BAT;
+import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import net.cubespace.Yamler.Config.YamlConfig;
 
 public abstract class ModuleConfiguration extends YamlConfig {
-	
+
 	// We must use an init method because if we use the super constructor, it doesn't work properly (field of children class are overwritten)
 	public void init(final String moduleName){
-       try {
-        initThrowingExceptions(moduleName);
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
+		try {
+			initThrowingExceptions(moduleName);
+		} catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 	/**
 	 * Unlike {@link ModuleConfiguration#init()} this init method throw the exception and doesn't
 	 * print it in the console
 	 */
 	public void initThrowingExceptions(final String moduleName) throws InvalidConfigurationException{
-	    CONFIG_HEADER = new String[] { "BungeeAdminTools - " + moduleName + " configuration file" };
-	    CONFIG_FILE = new File(BAT.getInstance().getDataFolder(), moduleName + ".yml");
-        init();
-        load();
+		CONFIG_HEADER = new String[] { "BungeeAdminTools - " + moduleName + " configuration file" };
+		CONFIG_FILE = new File(BAT.getInstance().getDataFolder(), moduleName + ".yml");
+		init();
+		load();
 	}
 
-	@Getter
 	private boolean enabled = true;
 
 	private Map<String, Boolean> commands = new HashMap<String, Boolean>();
@@ -54,6 +52,14 @@ public abstract class ModuleConfiguration extends YamlConfig {
 			}
 		}
 		return enabledCmds;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public Map<String, Boolean> getCommands() {
+		return commands;
 	}
 
 	/**

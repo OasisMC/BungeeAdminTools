@@ -38,6 +38,7 @@ public class KickCommand extends CommandHandler {
 					.getPermission());
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public void onCommand(final CommandSender sender, final String[] args, final boolean confirmedCmd)
 				throws IllegalArgumentException {

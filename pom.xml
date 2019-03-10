@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.Alphart</groupId>
 	<artifactId>bungeeadmintools</artifactId>
-	<name>BungeeAdminTools</name>
+	<name>OasisAdminTools</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -138,9 +138,5 @@
 		</plugins>
 	</build>
 	<description>Bungee plugin which handles ban, mute and kick management</description>
-<<<<<<< Updated upstream
-	<version>1.5.3-premium</version>
-=======
-	<version>1.4.2</version>
->>>>>>> Stashed changes
+	<version>1.5.4</version>
 </project>
