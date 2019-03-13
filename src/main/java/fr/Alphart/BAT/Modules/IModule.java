@@ -3,6 +3,7 @@ package fr.Alphart.BAT.Modules;
 import java.util.List;
 
 public interface IModule {
+
 	// Constants
 	// Server groups related
 	public static final String NO_REASON = "noreason";

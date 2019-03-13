@@ -28,7 +28,7 @@ public abstract class ModuleConfiguration extends YamlConfig {
 	 * Unlike {@link ModuleConfiguration#init()} this init method throw the exception and doesn't
 	 * print it in the console
 	 */
-	public void initThrowingExceptions(final String moduleName) throws InvalidConfigurationException{
+	public void initThrowingExceptions(final String moduleName) throws InvalidConfigurationException {
 		CONFIG_HEADER = new String[] { "BungeeAdminTools - " + moduleName + " configuration file" };
 		CONFIG_FILE = new File(BAT.getInstance().getDataFolder(), moduleName + ".yml");
 		init();
@@ -69,6 +69,7 @@ public abstract class ModuleConfiguration extends YamlConfig {
 	 *            list
 	 */
 	public void setProvidedCmds(final List<String> cmds) {
+
 		Collections.sort(cmds);
 		// Add new commands if there are
 		for (final String cmdName : cmds) {
@@ -76,6 +77,7 @@ public abstract class ModuleConfiguration extends YamlConfig {
 				commands.put(cmdName, true);
 			}
 		}
+
 		// Iterate through the commands map and remove the ones who don't exist (e.g because of an update)
 		for(final Iterator<Map.Entry<String, Boolean>> it = commands.entrySet().iterator(); it.hasNext();){
 			final Map.Entry<String, Boolean> cmdEntry = it.next();
@@ -83,5 +85,6 @@ public abstract class ModuleConfiguration extends YamlConfig {
 				it.remove();
 			}
 		}
+
 	}
 }

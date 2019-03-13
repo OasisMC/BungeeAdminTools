@@ -8,6 +8,7 @@ import java.util.List;
 import fr.Alphart.BAT.BAT;
 
 public abstract class CommandHandler {
+
 	private final IModule module;
 	private final List<BATCommand> commands;
 
@@ -21,8 +22,10 @@ public abstract class CommandHandler {
 	}
 
 	public void loadCmds() {
+
 		// Get all commands and put them in a list
 		final List<String> cmdName = new ArrayList<String>();
+
 		for (final Class<?> subClass : getClass().getDeclaredClasses()) {
 			try {
 				if(subClass.getAnnotation(BATCommand.Disable.class) != null){
@@ -36,7 +39,7 @@ public abstract class CommandHandler {
 				BAT.getInstance()
 				.getLogger()
 				.severe("An error happend during loading of " + module.getName()
-						+ " commands please report this :");
+				+ " commands please report this :");
 				e.printStackTrace();
 			}
 		}
@@ -53,6 +56,7 @@ public abstract class CommandHandler {
 				it.remove();
 			}
 		}
+
 	}
 
 }
