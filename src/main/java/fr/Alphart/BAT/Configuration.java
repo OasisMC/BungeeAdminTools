@@ -6,22 +6,25 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 
-import lombok.Setter;
 import net.cubespace.Yamler.Config.Comment;
 import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import net.cubespace.Yamler.Config.Path;
 import net.cubespace.Yamler.Config.YamlConfig;
 
 public class Configuration extends YamlConfig {
-	public Configuration(){
+
+	public Configuration() {
+
 		CONFIG_HEADER = new String[]{"Bungee Admin Tools - Configuration file"};
 		CONFIG_FILE = new File(BAT.getInstance().getDataFolder(), "config.yml");
+
 		try {
 			init();
 			save();
 		} catch (final InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	public boolean isDebugMode() {
@@ -81,8 +84,6 @@ public class Configuration extends YamlConfig {
 		return mysql_port;
 	}
 
-
-
 	private String language = "en";
 	private String prefix = "&c[&3OAT&c]&8 ";
 
@@ -102,7 +103,6 @@ public class Configuration extends YamlConfig {
 
 
 	@Comment("Set to true to use MySQL. Otherwise SQL Lite will be used")
-	@Setter
 	@Path(value = "mysql.enabled")
 	private boolean mysql_enabled = true;
 	@Path(value = "mysql.user")
@@ -116,6 +116,7 @@ public class Configuration extends YamlConfig {
 	@Comment("If you don't know it, just leave it like this (3306 = default mysql port)")
 	@Path(value = "mysql.port")
 	private String mysql_port = "3306";
+
 	public Locale getLocale() {
 		if (language.length() != 2) {
 			BAT.getInstance().getLogger().severe("Incorrect language set ... The language was set to english.");
@@ -123,4 +124,5 @@ public class Configuration extends YamlConfig {
 		}
 		return new Locale(language);
 	}
+
 }
